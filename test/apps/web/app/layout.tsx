@@ -1,8 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
+import { globalTokens as $ } from "./globalTokens.stylex";
+import * as stylex from "@stylexjs/stylex";
 
 export const metadata: Metadata = {
   title: "Create Turborepo",
@@ -15,8 +14,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }): JSX.Element {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html {...stylex.props(styles.html, styles.reset)} lang="en">
+      <body {...stylex.props(styles.reset, styles.body)}>{children}</body>
     </html>
   );
 }
+
+const DARK = "@media (prefers-color-scheme: dark)";
+
+const styles = stylex.create({
+  html: {
+    colorScheme: "light dark",
+  },
+  reset: {
+    minHeight: "100%",
+    margin: 0,
+    padding: 0,
+  },
+  body: {
+    color: `rgba(${$.foregroundR}, ${$.foregroundG}, ${$.foregroundB}, 1)`,
+    backgroundImage: {
+      default: "linear-gradient(to bottom, rgb(214, 219, 220), white)",
+      [DARK]: "linear-gradient(to bottom, rgb(20, 22, 27), black)",
+    },
+  },
+});
